@@ -1,0 +1,80 @@
+import React from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "./components/ui/sheet";
+import { motion } from "framer-motion";
+import { RotateCcw } from "lucide-react";
+import { DEFAULT_SETTINGS } from "./lib/insulin";
+import { NihoRow } from "./components/motifs";
+
+const Field = ({ label, hint, value, onChange, step, testId, suffix }) => (
+  <label className="block border-t border-neutral-800 py-4 first:border-t-0" data-testid={`${testId}-field`}>
+    <div className="flex items-baseline justify-between gap-4 mb-2">
+      <span className="font-body text-[10px] tracking-[0.25em] uppercase font-bold text-neutral-400">{label}</span>
+      {hint && <span className="font-body text-[10px] text-neutral-500 uppercase tracking-widest">{hint}</span>}
+    </div>
+    <div className="flex items-center gap-2">
+      <input type="number" inputMode="decimal" step={step} value={value}
+        onChange={(e) => { const n = Number(e.target.value); onChange(Number.isFinite(n) ? n : 0); }}
+        className="font-display tabular text-2xl sm:text-3xl font-bold text-white bg-transparent border border-neutral-800 focus:border-red-600 outline-none px-3 py-2 w-full"
+        data-testid={testId} />
+      {suffix && <span className="font-body text-xs uppercase tracking-widest text-neutral-500 min-w-max">{suffix}</span>}
+    </div>
+  </label>
+);
+
+export const SettingsSheet = ({ open, onOpenChange, settings, setSettings }) => {
+  const update = (patch) => setSettings((s) => ({ ...s, ...patch }));
+  const reset = () => setSettings({ ...DEFAULT_SETTINGS });
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="bg-neutral-950 border-l border-neutral-800 w-full sm:max-w-md p-0 overflow-y-auto">
+        <div className="niho-band" />
+        <div className="p-6 sm:p-8">
+          <SheetHeader className="text-left mb-8">
+            <SheetTitle className="font-display text-3xl sm:text-4xl font-black tracking-tighter text-white">Tautuhinga</SheetTitle>
+            <SheetDescription className="font-body text-neutral-400 text-sm tracking-wide">
+              Settings — configure your ratios, correction factors and thresholds. Saved on this device only.
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="space-y-8">
+            <section>
+              <h3 className="font-display text-xs tracking-[0.3em] uppercase font-bold text-red-600 mb-1">Insulin-to-Carb Ratios</h3>
+              <p className="font-body text-xs text-neutral-500 mb-3">Grams of carbs covered by 1 unit of insulin.</p>
+              <div className="border border-neutral-800"><div className="px-4">
+                <Field label="AM Ratio" hint="Before noon" value={settings.amRatio} onChange={(v) => update({ amRatio: v })} step={0.1} suffix="g / unit" testId="setting-am-ratio" />
+                <Field label="PM Ratio" hint="After noon" value={settings.pmRatio} onChange={(v) => update({ pmRatio: v })} step={0.1} suffix="g / unit" testId="setting-pm-ratio" />
+              </div></div>
+            </section>
+
+            <section>
+              <h3 className="font-display text-xs tracking-[0.3em] uppercase font-bold text-red-600 mb-1">Correction Factors</h3>
+              <p className="font-body text-xs text-neutral-500 mb-3">Multiplier applied to ratio when BG is above the high threshold.</p>
+              <div className="border border-neutral-800"><div className="px-4">
+                <Field label="AM Factor" value={settings.amCorrectionFactor} onChange={(v) => update({ amCorrectionFactor: v })} step={0.05} hint={`= ${(settings.amRatio * settings.amCorrectionFactor).toFixed(2)} per mmol`} testId="setting-am-cf" />
+                <Field label="PM Factor" value={settings.pmCorrectionFactor} onChange={(v) => update({ pmCorrectionFactor: v })} step={0.05} hint={`= ${(settings.pmRatio * settings.pmCorrectionFactor).toFixed(2)} per mmol`} testId="setting-pm-cf" />
+              </div></div>
+            </section>
+
+            <section>
+              <h3 className="font-display text-xs tracking-[0.3em] uppercase font-bold text-red-600 mb-1">Thresholds</h3>
+              <p className="font-body text-xs text-neutral-500 mb-3">Blood glucose bounds (mmol/L).</p>
+              <div className="border border-neutral-800"><div className="px-4">
+                <Field label="High" value={settings.highThreshold} onChange={(v) => update({ highThreshold: v })} step={0.5} suffix="mmol/L" testId="setting-high" />
+                <Field label="Low" value={settings.lowThreshold} onChange={(v) => update({ lowThreshold: v })} step={0.5} suffix="mmol/L" testId="setting-low" />
+              </div></div>
+            </section>
+
+            <motion.button type="button" whileTap={{ scale: 0.97 }} onClick={reset}
+              className="w-full flex items-center justify-center gap-2 border border-neutral-800 hover:border-red-600 hover:text-red-500 px-4 py-4 font-body text-xs tracking-[0.25em] uppercase font-bold text-neutral-300 transition-colors"
+              data-testid="settings-reset-btn">
+              <RotateCcw className="w-4 h-4" /> Reset to defaults
+            </motion.button>
+
+            <div className="pt-4"><NihoRow className="w-full h-3 opacity-60" /></div>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+};

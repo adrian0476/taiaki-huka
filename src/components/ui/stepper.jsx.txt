@@ -1,0 +1,45 @@
+import React from "react";
+import { motion } from "framer-motion";
+import { Minus, Plus } from "lucide-react";
+
+const vibrate = (ms = 8) => {
+  if (typeof navigator !== "undefined" && navigator.vibrate) {
+    try { navigator.vibrate(ms); } catch { /* ignore */ }
+  }
+};
+
+export const Stepper = ({ value, onChange, step = 1, min = 0, max = 999, precision = 0, label, unit, testIdPrefix }) => {
+  const clamp = (v) => Math.min(max, Math.max(min, v));
+  const round = (v) => { const p = 10 ** precision; return Math.round(v * p) / p; };
+  const set = (v) => { onChange(round(clamp(v))); vibrate(); };
+  const handleInput = (e) => {
+    const raw = e.target.value;
+    if (raw === "" || raw === "-") { onChange(0); return; }
+    const n = Number(raw);
+    if (Number.isFinite(n)) onChange(round(clamp(n)));
+  };
+
+  return (
+    <div className="relative border border-neutral-800 bg-neutral-950/60 p-5 sm:p-6" data-testid={`${testIdPrefix}-stepper`}>
+      <div className="flex items-center justify-between mb-3">
+        <span className="font-body text-[10px] tracking-[0.25em] uppercase font-bold text-neutral-400">{label}</span>
+        {unit && <span className="font-body text-[10px] tracking-[0.2em] uppercase font-semibold text-neutral-500">{unit}</span>}
+      </div>
+      <div className="flex items-center justify-between gap-3">
+        <motion.button type="button" whileTap={{ scale: 0.9 }} onClick={() => set(value - step)}
+          className="h-14 w-14 sm:h-16 sm:w-16 flex items-center justify-center border border-neutral-700 hover:border-white hover:bg-white hover:text-black text-white transition-colors active:bg-red-600 active:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
+          aria-label={`Decrease ${label}`} data-testid={`${testIdPrefix}-decrement`}>
+          <Minus className="w-6 h-6" strokeWidth={2.5} />
+        </motion.button>
+        <input type="number" inputMode="decimal" value={Number.isFinite(value) ? value : 0} onChange={handleInput} step={step} min={min} max={max}
+          className="font-display tabular text-4xl sm:text-5xl font-black text-center bg-transparent w-full outline-none text-white"
+          data-testid={`${testIdPrefix}-value`} />
+        <motion.button type="button" whileTap={{ scale: 0.9 }} onClick={() => set(value + step)}
+          className="h-14 w-14 sm:h-16 sm:w-16 flex items-center justify-center border border-neutral-700 hover:border-white hover:bg-white hover:text-black text-white transition-colors active:bg-red-600 active:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
+          aria-label={`Increase ${label}`} data-testid={`${testIdPrefix}-increment`}>
+          <Plus className="w-6 h-6" strokeWidth={2.5} />
+        </motion.button>
+      </div>
+    </div>
+  );
+};

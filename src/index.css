@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  overscroll-behavior-y: none;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 79% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 79% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 79% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 79% 52%;
+    --radius: 0.25rem;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+  ::selection { background-color: #e62525; color: #ffffff; }
+}
+
+.font-display {
+  font-family: "Unbounded", ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "tnum";
+}
+.font-body { font-family: "Manrope", ui-sans-serif, system-ui, sans-serif; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+.niho-band {
+  height: 10px;
+  background-image: linear-gradient(135deg, #e62525 25%, transparent 25%, transparent 50%, #e62525 50%, #e62525 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+  opacity: 0.9;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
