@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Settings2, AlertTriangle, TrendingDown } from "lucide-react";
-import { Stepper } from "./components/ui/Stepper";
+import { Stepper } from "../components/ui/Stepper";
 import { SettingsSheet } from "./components/SettingsSheet";
 import { Koru, NihoRow } from "./components/motifs";
 import { autoDetectToD, calculateDose, loadSettings, saveSettings } from "./lib/insulin";
