@@ -2,7 +2,7 @@ import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "./components/ui/sheet";
 import { motion } from "framer-motion";
 import { RotateCcw } from "lucide-react";
-import { DEFAULT_SETTINGS } from "./lib/insulin";
+import { DEFAULT_SETTINGS } from "../../lib/insulin";
 import { NihoRow } from "./components/motifs";
 
 const Field = ({ label, hint, value, onChange, step, testId, suffix }) => (
