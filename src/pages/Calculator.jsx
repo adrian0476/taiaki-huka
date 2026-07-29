@@ -4,7 +4,7 @@ import { Settings2, AlertTriangle, TrendingDown } from "lucide-react";
 import { Stepper } from "../components/ui/Stepper";
 import { SettingsSheet } from "../components/ui/SettingsSheet";
 import { Koru, NihoRow } from "../components/ui/Motifs";
-import { autoDetectToD, calculateDose, loadSettings, saveSettings } from "./lib/insulin";
+import { autoDetectToD, calculateDose, loadSettings, saveSettings } from "../lib/insulin";
 
 const ToDToggle = ({ tod, setTod, auto, onAutoReset }) => (
   <div className="inline-flex items-center border border-neutral-800 p-1 bg-neutral-950" data-testid="tod-toggle">
